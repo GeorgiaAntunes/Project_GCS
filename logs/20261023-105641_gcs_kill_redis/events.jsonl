@@ -1,0 +1,2 @@
+{"t": 1792763801.4580827, "event": "scenario_init", "scenario": "gcs_kill", "storage": "redis", "down": 1.0, "warmup": 0.0, "observe": 1.0, "restart_delay": 2, "reconnect_timeout": 60, "thr": 2.0, "keep": false}
+{"t": 1792763822.3064206, "event": "head_process_started", "restart": 0, "pid": 23632, "mode": "redis"}

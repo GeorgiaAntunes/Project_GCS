@@ -1,0 +1,11 @@
+{
+  "scenario": "gcs_kill",
+  "storage": "redis",
+  "down": 1.0,
+  "warmup": 0.0,
+  "observe": 1.0,
+  "restart_delay": 2,
+  "reconnect_timeout": 60,
+  "thr": 2.0,
+  "keep": false
+}

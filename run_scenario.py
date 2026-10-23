@@ -122,6 +122,16 @@ def run(cmd, timeout):
     return subprocess.run([sys.executable, str(HERE / "probes.py"), cmd], capture_output=True, text=True, timeout=timeout)
 
 
+def save_run_artifacts(run_dir):
+    if EVENTS_FILE.exists():
+        shutil.copy(EVENTS_FILE, run_dir / "events.jsonl")
+    for f in ("head.log", "supervisor.log", "workers.log"):
+        if (RUN_DIR / f).exists():
+            shutil.copy(RUN_DIR / f, run_dir / f)
+    for f in PROBE_DIR.glob("probe_*.jsonl"):
+        shutil.copy(f, run_dir / f.name)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     ap.add_argument("scenario", choices=FAULTS)
@@ -145,39 +155,36 @@ def main():
     EVENTS_FILE.unlink(missing_ok=True)
     (run_dir / "params.json").write_text(json.dumps(vars(a), indent=2))
 
-    event("scenario_init", **vars(a))
-    cluster.down(flush=True)
-    cluster.up(a.storage)
-    r = run("setup", 180)
-    if r.returncode != 0:
-        print(r.stdout, r.stderr); sys.exit("falha no setup dos probes")
-    event("probes_ready")
-    time.sleep(a.warmup)
-
-    mon = Monitor(); mon.start()
-    time.sleep(1.5)
-    FAULTS[a.scenario](a)
-    time.sleep(a.observe)
-    mon.stop()
-    event("observe_end")
-
-    # Estado sobreviveu? (KV marcador + detached actors)
     try:
-        v = run("verify", 120)
-        line = next((l for l in v.stdout.splitlines() if l.startswith("VERIFY_JSON ")), None)
-        event("verify_state", **(json.loads(line[12:]) if line else {"error": (v.stderr or v.stdout)[-300:]}))
-    except subprocess.TimeoutExpired:
-        event("verify_state", error="timeout (cluster inacessível)")
-
-    shutil.copy(EVENTS_FILE, run_dir / "events.jsonl")
-    for f in ("head.log", "supervisor.log", "workers.log"):
-        if (RUN_DIR / f).exists():
-            shutil.copy(RUN_DIR / f, run_dir / f)
-    for f in PROBE_DIR.glob("probe_*.jsonl"):
-        shutil.copy(f, run_dir / f.name)
-    analyze.report(run_dir, a.thr)
-    if not a.keep:
+        event("scenario_init", **vars(a))
         cluster.down(flush=True)
+        cluster.up(a.storage)
+        r = run("setup", 180)
+        if r.returncode != 0:
+            print(r.stdout, r.stderr); sys.exit("falha no setup dos probes")
+        event("probes_ready")
+        time.sleep(a.warmup)
+
+        mon = Monitor(); mon.start()
+        time.sleep(1.5)
+        FAULTS[a.scenario](a)
+        time.sleep(a.observe)
+        mon.stop()
+        event("observe_end")
+
+        # Estado sobreviveu? (KV marcador + detached actors)
+        try:
+            v = run("verify", 120)
+            line = next((l for l in v.stdout.splitlines() if l.startswith("VERIFY_JSON ")), None)
+            event("verify_state", **(json.loads(line[12:]) if line else {"error": (v.stderr or v.stdout)[-300:]}))
+        except subprocess.TimeoutExpired:
+            event("verify_state", error="timeout (cluster inacessível)")
+
+        analyze.report(run_dir, a.thr)
+    finally:
+        save_run_artifacts(run_dir)
+        if not a.keep:
+            cluster.down(flush=True)
 
 
 if __name__ == "__main__":
