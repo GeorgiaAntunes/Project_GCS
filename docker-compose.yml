@@ -1,0 +1,12 @@
+# Redis externo (persistente via AOF) usado como backend do GCS
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: ray-ft-redis
+    command: ["redis-server", "--requirepass", "raypass", "--appendonly", "yes", "--appendfsync", "everysec"]
+    ports:
+      - "6399:6379"
+    volumes:
+      - redis-data:/data
+volumes:
+  redis-data:
