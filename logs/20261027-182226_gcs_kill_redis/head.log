@@ -1,0 +1,167 @@
+2026-10-23 10:24:32,526	INFO node.py:398 -- Could not retrieve session key from storage.
+Usage stats collection is disabled.
+
+[37mLocal node IP[39m: [1m127.0.0.1[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+[36mNext steps[39m
+  
+  To connect to this Ray cluster:
+    [35mimport[39m[26m ray
+    ray[35m.[39m[26minit(_node_ip_address[35m=[39m[26m[33m'127.0.0.1'[39m[26m)
+  
+  To terminate the Ray runtime, run
+  [1m  ray stop[22m
+  
+  To view the status of the cluster, use
+    [1mray status[22m[26m
+
+[36m[1m--block[22m[39m
+  This command will now block forever until terminated by a signal.
+  Running subprocesses are monitored and a message will be printed if any of them terminate unexpectedly. Subprocesses exit with SIGTERM will be treated as graceful, thus NOT reported.
+2026-10-23 10:55:54,009	INFO node.py:398 -- Could not retrieve session key from storage.
+Usage stats collection is disabled.
+
+[37mLocal node IP[39m: [1m127.0.0.1[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+[36mNext steps[39m
+  
+  To connect to this Ray cluster:
+    [35mimport[39m[26m ray
+    ray[35m.[39m[26minit(_node_ip_address[35m=[39m[26m[33m'127.0.0.1'[39m[26m)
+  
+  To terminate the Ray runtime, run
+  [1m  ray stop[22m
+  
+  To view the status of the cluster, use
+    [1mray status[22m[26m
+
+[36m[1m--block[22m[39m
+  This command will now block forever until terminated by a signal.
+  Running subprocesses are monitored and a message will be printed if any of them terminate unexpectedly. Subprocesses exit with SIGTERM will be treated as graceful, thus NOT reported.
+2026-10-23 10:57:05,822	INFO node.py:398 -- Could not retrieve session key from storage.
+Usage stats collection is disabled.
+
+[37mLocal node IP[39m: [1m127.0.0.1[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+[36mNext steps[39m
+  
+  To connect to this Ray cluster:
+    [35mimport[39m[26m ray
+    ray[35m.[39m[26minit(_node_ip_address[35m=[39m[26m[33m'127.0.0.1'[39m[26m)
+  
+  To terminate the Ray runtime, run
+  [1m  ray stop[22m
+  
+  To view the status of the cluster, use
+    [1mray status[22m[26m
+
+[36m[1m--block[22m[39m
+  This command will now block forever until terminated by a signal.
+  Running subprocesses are monitored and a message will be printed if any of them terminate unexpectedly. Subprocesses exit with SIGTERM will be treated as graceful, thus NOT reported.
+2026-10-27 18:18:59,748	WARNING authentication_token_setup.py:73 -- Token authentication is disabled for this Ray cluster. Anyone with network access to the cluster can run arbitrary code and access its data. To enable token authentication, generate a token with `ray get-auth-token --generate` or set RAY_AUTH_MODE=token. For more information, see https://docs.ray.io/en/latest/ray-security/token-auth.html
+2026-10-27 18:19:00,764	INFO node.py:538 -- Could not retrieve session key from storage.
+Usage stats collection is disabled.
+
+[37mLocal node IP[39m: [1m127.0.0.1[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+[36mNext steps[39m
+  [2mNote: The following commands are intended for use on[22m
+  [2mthe head node or within the cluster network.[22m
+  
+  
+  To connect to this Ray cluster:
+    [35mimport[39m[26m ray
+    ray[35m.[39m[26minit(_node_ip_address[35m=[39m[26m[33m'127.0.0.1'[39m[26m)
+  
+  To terminate the Ray runtime, run
+  [1m  ray stop[22m
+  
+  To view the status of the cluster, use
+    [1mray status[22m[26m
+
+[36m[1m--block[22m[39m
+  This command will now block forever until terminated by a signal.
+  Running subprocesses are monitored and a message will be printed if any of them terminate unexpectedly. Subprocesses exit with SIGTERM will be treated as graceful, thus NOT reported.
+  Process exit logs will be saved to: [1m/tmp/ray/session_2026-10-27_18-19-00_765212_66100/logs/ray_process_exit.log[22m[26m
+2026-10-27 18:19:48,768	INFO node.py:698 -- Node 95e87d13d3b4cae311b4c19b672dae645a3b27d85018568d9b3c64da received SIGTERM. Draining for up to 30.0 seconds before shutting down local processes.
+2026-10-27 18:19:49,276	INFO node.py:748 -- Local node finished draining; shutting down.
+2026-10-27 18:19:51,773	WARNING authentication_token_setup.py:73 -- Token authentication is disabled for this Ray cluster. Anyone with network access to the cluster can run arbitrary code and access its data. To enable token authentication, generate a token with `ray get-auth-token --generate` or set RAY_AUTH_MODE=token. For more information, see https://docs.ray.io/en/latest/ray-security/token-auth.html
+2026-10-27 18:19:52,787	INFO node.py:538 -- Could not retrieve session key from storage.
+Usage stats collection is disabled.
+
+[37mLocal node IP[39m: [1m192.168.15.4[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+[36mNext steps[39m
+  [2mNote: The following commands are intended for use on[22m
+  [2mthe head node or within the cluster network.[22m
+  
+  To add another node to this Ray cluster, run
+  [1m  RAY_ENABLE_WINDOWS_OR_OSX_CLUSTER=1 ray start --address='192.168.15.4:6380'[22m
+  
+  To connect to this Ray cluster:
+    [35mimport[39m[26m ray
+    ray[35m.[39m[26minit(_node_ip_address[35m=[39m[26m[33m'192.168.15.4'[39m[26m)
+  
+  To terminate the Ray runtime, run
+  [1m  ray stop[22m
+  
+  To view the status of the cluster, use
+    [1mray status[22m[26m
+
+[36m[1m--block[22m[39m
+  This command will now block forever until terminated by a signal.
+  Running subprocesses are monitored and a message will be printed if any of them terminate unexpectedly. Subprocesses exit with SIGTERM will be treated as graceful, thus NOT reported.
+  Process exit logs will be saved to: [1m/tmp/ray/session_2026-10-27_18-19-52_787546_66367/logs/ray_process_exit.log[22m[26m
+2026-10-27 18:22:26,575	INFO node.py:698 -- Node 596e66c51c19fd704d89e9d68cfe28fcbadecdf2875baf24d9934401 received SIGTERM. Draining for up to 30.0 seconds before shutting down local processes.
+2026-10-27 18:22:27,083	INFO node.py:748 -- Local node finished draining; shutting down.
+2026-10-27 18:22:29,628	WARNING authentication_token_setup.py:73 -- Token authentication is disabled for this Ray cluster. Anyone with network access to the cluster can run arbitrary code and access its data. To enable token authentication, generate a token with `ray get-auth-token --generate` or set RAY_AUTH_MODE=token. For more information, see https://docs.ray.io/en/latest/ray-security/token-auth.html
+2026-10-27 18:22:30,639	INFO node.py:538 -- Could not retrieve session key from storage.
+Usage stats collection is disabled.
+
+[37mLocal node IP[39m: [1m192.168.15.4[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+[36mNext steps[39m
+  [2mNote: The following commands are intended for use on[22m
+  [2mthe head node or within the cluster network.[22m
+  
+  To add another node to this Ray cluster, run
+  [1m  RAY_ENABLE_WINDOWS_OR_OSX_CLUSTER=1 ray start --address='192.168.15.4:6380'[22m
+  
+  To connect to this Ray cluster:
+    [35mimport[39m[26m ray
+    ray[35m.[39m[26minit(_node_ip_address[35m=[39m[26m[33m'192.168.15.4'[39m[26m)
+  
+  To terminate the Ray runtime, run
+  [1m  ray stop[22m
+  
+  To view the status of the cluster, use
+    [1mray status[22m[26m
+
+[36m[1m--block[22m[39m
+  This command will now block forever until terminated by a signal.
+  Running subprocesses are monitored and a message will be printed if any of them terminate unexpectedly. Subprocesses exit with SIGTERM will be treated as graceful, thus NOT reported.
+  Process exit logs will be saved to: [1m/tmp/ray/session_2026-10-27_18-22-30_640343_66901/logs/ray_process_exit.log[22m[26m

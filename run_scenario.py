@@ -70,7 +70,7 @@ def f_redis_outage(a):
 def f_cluster_kill(a):
     event("fault_cluster_kill")
     cluster.kill_supervisor(signal.SIGKILL)
-    subprocess.run(["ray", "stop", "--force"], capture_output=True)
+    subprocess.run(["ray", "stop", "--force"], capture_output=True, env=ray_cli_env())
     event("cluster_dead")
     time.sleep(a.down)
     event("fault_end_cluster_restart")
@@ -159,7 +159,7 @@ def main():
         event("scenario_init", **vars(a))
         cluster.down(flush=True)
         cluster.up(a.storage)
-        r = run("setup", 180)
+        r = run("setup", 300)
         if r.returncode != 0:
             print(r.stdout, r.stderr); sys.exit("falha no setup dos probes")
         event("probes_ready")
@@ -180,6 +180,7 @@ def main():
         except subprocess.TimeoutExpired:
             event("verify_state", error="timeout (cluster inacessível)")
 
+        save_run_artifacts(run_dir)
         analyze.report(run_dir, a.thr)
     finally:
         save_run_artifacts(run_dir)

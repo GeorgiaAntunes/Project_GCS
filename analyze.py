@@ -69,7 +69,8 @@ def report(run_dir, thr=2.0, pre_window=15):
             print(f"  {e['t'] - t0:+8.2f}s  {e['event']:<28} {extra if extra else ''}")
 
     rows = []
-    for f in sorted(PROBE_DIR.glob("probe_*.jsonl")):
+    probe_files = sorted(run_dir.glob("probe_*.jsonl")) or sorted(PROBE_DIR.glob("probe_*.jsonl"))
+    for f in probe_files:
         worker = f.stem.replace("probe_", "")
         by = {}
         for r in _load(f):

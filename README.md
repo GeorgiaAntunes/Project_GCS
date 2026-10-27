@@ -5,7 +5,8 @@ comportamento/tempo de recuperação a partir **de dentro dos workers**.
 
 ## Pré-requisitos
 - Linux, macOS ou WSL2 (cluster multi-nó local não é suportado no Windows nativo)
-- Python 3.9+ e Docker (só para o Redis)
+- Python 3.9+ e **um** Redis: Docker (`docker-compose.yml`) **ou** `redis-server` local (`brew install redis`).
+  O backend é escolhido sozinho (`LAB_REDIS_BACKEND=auto`); force com `LAB_REDIS_BACKEND=docker|native`.
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -76,6 +77,14 @@ degradação, instante de recuperação, duração do outage, nº de falhas e la
 - `cluster_kill`: `kv_marker_preserved=true` indica recuperação do estado via Redis; os detached actors tendem a
   ficar mortos (a doc do KubeRay deixa claro que o **estado** do actor não é persistido).
 - `--down` > `--reconnect-timeout`: workers desistem de reconectar → `SILENT`.
+
+## Correções que deixaram o `gcs_kill` funcional de ponta a ponta
+| Sintoma | Causa | Correção |
+|---|---|---|
+| Após o `kill -9` no `gcs_server`, o head entrava em loop de restart (`rc=1` a cada ~0,7s) e o GCS nunca voltava | O `ray start --head` recusa subir quando acha que já existe um cluster no mesmo endereço: lê `/tmp/ray/ray_current_cluster` e encontra os raylets dos workers (vivos, tentando reconectar) apontando para `:6380`. Erro: *"Ray is trying to start at X:6380, but is already running at X:6380"*. Só acontece porque todos os "nós" estão na mesma máquina | `head_supervisor.py` apaga o `ray_current_cluster` antes de cada (re)start e espera as portas fixas do head (6380/6390/6391) liberarem |
+| Processos/portas ocupados entre execuções | Supervisor órfão de uma execução interrompida (Ctrl-C) continuava reiniciando o head | `cluster.down()` mata supervisores órfãos, roda `ray stop --force`, espera as portas fecharem e limpa o `ray_current_cluster` |
+| Relatório quebrava com `FileNotFoundError: events.jsonl` | `analyze.report()` era chamado antes de copiar os logs para `logs/<run_id>/` | Artefatos copiados antes da análise; `analyze.py` lê os probes da própria pasta da execução |
+| Setup dos probes lento (≈60s no macOS) | Threads dos probes iniciavam no `__init__` e competiam com o `ping` do setup | Actors criados em paralelo, `ping` primeiro, depois `start()` dispara as threads (`max_concurrency=4`) |
 
 ## Limites conhecidos
 - Tudo roda em uma máquina (loopback): não modela partição de rede real. Para isso use `tc netem`/`iptables` no GCS.

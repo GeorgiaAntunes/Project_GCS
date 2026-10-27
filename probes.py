@@ -15,7 +15,7 @@ def _noop():
     return 1
 
 
-@ray.remote(num_cpus=0, max_restarts=0)
+@ray.remote(num_cpus=0, max_restarts=0, max_concurrency=4)
 class Heartbeat:
     def __init__(self, name, peer, log_path, interval=0.5, task_timeout=5.0):
         self.name, self.peer, self.interval, self.tt = name, peer, interval, task_timeout
@@ -23,6 +23,13 @@ class Heartbeat:
         self.fh = open(log_path, "a", buffering=1)
         self.node_id = ray.get_runtime_context().get_node_id()
         self.n = 0
+        self.started = False
+
+    def start(self):
+        """Dispara as threads dos probes (separado do __init__ para o setup não competir com elas)."""
+        if self.started:
+            return True
+        self.started = True
         probes = [
             ("local", self._tick),                    # não toca em Ray: prova que o processo vive
             ("task_local", self._task_local),         # tarefa presa ao próprio nó (só raylet local)
@@ -32,6 +39,7 @@ class Heartbeat:
         ]
         for probe, fn in probes:
             threading.Thread(target=self._loop, args=(probe, fn), daemon=True).start()
+        return True
 
     def _w(self, probe, t_start, ok, **extra):
         t = time.time()
@@ -86,11 +94,14 @@ def setup():
     token = uuid.uuid4().hex
     _internal_kv_put(b"ft_marker", token.encode(), overwrite=True, namespace=b"ft")
     (RUN_DIR / "marker").write_text(token)
+    actors = []
     for i, w in enumerate(WORKERS):
         peer = WORKERS[(i + 1) % len(WORKERS)]
         a = Heartbeat.options(name=f"hb_{w}", namespace="ft", lifetime="detached",
                               resources={w: 0.1}).remote(w, f"hb_{peer}", str(PROBE_DIR / f"probe_{w}.jsonl"))
-        ray.get(a.ping.remote(), timeout=60)
+        actors.append(a)
+    ray.get([a.ping.remote() for a in actors], timeout=120)   # os dois actors sobem em paralelo
+    ray.get([a.start.remote() for a in actors], timeout=60)
     print("probes ok")
     ray.shutdown()
 

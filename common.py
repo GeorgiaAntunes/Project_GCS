@@ -1,6 +1,6 @@
 """Constantes, helpers e comandos `ray start` compartilhados pelo laboratório."""
 from __future__ import annotations
-import json, os, pathlib, socket, subprocess, time
+import json, os, pathlib, socket, subprocess, sys, time
 
 ROOT = pathlib.Path(__file__).resolve().parent
 RUN_DIR = ROOT / ".run"
@@ -45,9 +45,16 @@ def event(name: str, **kw) -> None:
     print(f"[{time.strftime('%H:%M:%S')}] {name} {kw if kw else ''}", flush=True)
 
 
-def ray_env(mode: str) -> dict:
+def ray_cli_env() -> dict:
     env = os.environ.copy()
     env["RAY_USAGE_STATS_ENABLED"] = "0"
+    if sys.platform in ("darwin", "win32"):
+        env["RAY_ENABLE_WINDOWS_OR_OSX_CLUSTER"] = "1"
+    return env
+
+
+def ray_env(mode: str) -> dict:
+    env = ray_cli_env()
     # Quanto tempo raylets/workers tentam reconectar ao GCS antes de desistir (default Ray: 60s)
     env["RAY_gcs_rpc_server_reconnect_timeout_s"] = str(reconnect_timeout())
     if mode == "redis":
@@ -75,6 +82,19 @@ def worker_cmd(name: str) -> list[str]:
             "--num-cpus", "2", "--resources", json.dumps({name: 1})]
 
 
+def reset_ray_address_file() -> None:
+    """Apaga <temp_dir_do_ray>/ray_current_cluster (ver head_supervisor.py)."""
+    try:
+        from ray._common.utils import get_ray_address_file
+        path = get_ray_address_file(None)
+    except Exception:  # noqa  (versões antigas do Ray)
+        path = "/tmp/ray/ray_current_cluster"
+    try:
+        os.remove(path)
+    except FileNotFoundError:
+        pass
+
+
 def tcp_up(port: int = GCS_PORT, timeout: float = 0.3) -> bool:
     try:
         with socket.create_connection((HOST, port), timeout=timeout):
@@ -97,7 +117,7 @@ def health_ok(timeout: float = 5) -> bool:
     try:
         r = subprocess.run(["ray", "health-check", "--address", f"{HOST}:{GCS_PORT}"],
                            capture_output=True, timeout=timeout,
-                           env={**os.environ, "RAY_USAGE_STATS_ENABLED": "0"})
+                           env=ray_cli_env())
         return r.returncode == 0
     except subprocess.TimeoutExpired:
         return False

@@ -1,0 +1,36 @@
+[31mMulti-node Ray clusters are not supported on Windows and OSX. Restart the Ray cluster with the environment variable `[1mRAY_ENABLE_WINDOWS_OR_OSX_CLUSTER[22m[26m=1` to proceed anyway.[39m
+[31mMulti-node Ray clusters are not supported on Windows and OSX. Restart the Ray cluster with the environment variable `[1mRAY_ENABLE_WINDOWS_OR_OSX_CLUSTER[22m[26m=1` to proceed anyway.[39m
+[31mMulti-node Ray clusters are not supported on Windows and OSX. Restart the Ray cluster with the environment variable `[1mRAY_ENABLE_WINDOWS_OR_OSX_CLUSTER[22m[26m=1` to proceed anyway.[39m
+[31mMulti-node Ray clusters are not supported on Windows and OSX. Restart the Ray cluster with the environment variable `[1mRAY_ENABLE_WINDOWS_OR_OSX_CLUSTER[22m[26m=1` to proceed anyway.[39m
+[37mLocal node IP[39m: [1m192.168.15.4[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+To terminate the Ray runtime, run
+[1m  ray stop[22m
+[37mLocal node IP[39m: [1m192.168.15.4[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+To terminate the Ray runtime, run
+[1m  ray stop[22m
+[37mLocal node IP[39m: [1m192.168.15.4[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+To terminate the Ray runtime, run
+[1m  ray stop[22m
+[37mLocal node IP[39m: [1m192.168.15.4[22m
+
+[32m--------------------[39m
+[32mRay runtime started.[39m
+[32m--------------------[39m
+
+To terminate the Ray runtime, run
+[1m  ray stop[22m
